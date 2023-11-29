@@ -5,4 +5,5 @@ data class ContactEntity(
     val name: String,
     val surname: String,
     val phoneNumber: Number,
-): ContactItem
+    var isSelected: Boolean = false,
+) : ContactItem

@@ -10,4 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_delete_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="30dp"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:text="@string/delete_all"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_undo_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="30dp"
+        android:backgroundTint="@android:color/holo_blue_light"
+        android:text="@string/unselect"
+        android:visibility="gone" />
+
 </FrameLayout>

@@ -57,4 +57,36 @@ class ContactsViewModel @Inject constructor(private val repo: ContactsRepo) : Vi
             }
         }
     }
+
+    fun setContactSelected(contact: ContactEntity) {
+        viewModelScope.launch {
+            _state.value = _state.value?.apply {
+                remove(contact)
+                add(contact.copy(isSelected = !contact.isSelected))
+                sortBy { (it as ContactEntity).id }
+            }
+        }
+    }
+
+    fun deleteAllSelected() {
+        viewModelScope.launch {
+            val newList = mutableListOf<ContactsRecyclerItem>()
+            _state.value?.forEach {
+                if (!(it as ContactEntity).isSelected) {
+                    newList.add(it)
+                }
+            }
+            _state.value = newList
+        }
+    }
+
+    fun undoAllSelected() {
+        viewModelScope.launch {
+            val newList = mutableListOf<ContactsRecyclerItem>()
+            _state.value?.forEach {
+                newList.add((it as ContactEntity).copy(isSelected = false))
+            }
+            _state.value = newList
+        }
+    }
 }

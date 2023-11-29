@@ -1,6 +1,7 @@
 package com.example.aston_intensiv_3.presentation
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ class ContactsActivity : AppCompatActivity() {
     private val contactAdapter = ContactsCompositeAdapter(
         onContactItemClick = { item -> updateContact(item) },
         onContactDeleteClick = { item -> deleteContact(item) },
+        onContactItemLongClick = { item -> onContactItemLongClick(item) },
         onAddContactClick = { addContact() }
     )
 
@@ -39,6 +41,7 @@ class ContactsActivity : AppCompatActivity() {
                 add(AddContactItemSingleton)
             }
             renderRecyclerData(data.toList())
+            renderFabs(state.map { it as ContactEntity })
         }
         viewModel.getState()
     }
@@ -48,6 +51,19 @@ class ContactsActivity : AppCompatActivity() {
         val diff = Utils.getStandardDiff(oldList, newList)
         contactAdapter.items = newList
         diff.dispatchUpdatesTo(contactAdapter)
+    }
+
+    private fun renderFabs(state: List<ContactEntity>) {
+        var isSelection = false
+        state.forEach {
+            if (it.isSelected) {
+                isSelection = true
+            }
+        }
+        binding.btnDeleteAll.visibility = if (isSelection) View.VISIBLE else View.GONE
+        binding.btnUndoSelection.visibility = if (isSelection) View.VISIBLE else View.GONE
+        binding.btnDeleteAll.setOnClickListener { viewModel.deleteAllSelected() }
+        binding.btnUndoSelection.setOnClickListener { viewModel.undoAllSelected() }
     }
 
 
@@ -69,5 +85,10 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun addContact() {
+    }
+
+    private fun onContactItemLongClick(item: ContactEntity): Boolean {
+        viewModel.setContactSelected(item)
+        return !item.isSelected
     }
 }
