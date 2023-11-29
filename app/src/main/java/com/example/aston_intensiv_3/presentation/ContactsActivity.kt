@@ -17,6 +17,13 @@ class ContactsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[ContactsViewModel::class.java]
+        initViewModel()
+    }
 
+    private fun initViewModel() {
+        viewModel.state.observe(this) { state ->
+
+        }
+        viewModel.getState()
     }
 }
