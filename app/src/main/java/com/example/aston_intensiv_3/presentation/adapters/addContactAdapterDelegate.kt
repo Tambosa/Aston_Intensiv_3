@@ -12,5 +12,5 @@ fun addContactAdapterDelegate(
         { layoutInflater, root ->
             AddContactItemBinding.inflate(layoutInflater, root, false)
         }) {
-        binding.root.setOnClickListener { onAddContact() }
+        binding.addNewContactBtn.setOnClickListener { onAddContact() }
     }

@@ -24,6 +24,7 @@ class ContactsViewModel @Inject constructor(private val repo: ContactsRepo) : Vi
             if (_state.value == null) {
                 _state.value = mutableListOf<ContactsRecyclerItem>().apply {
                     addAll(repo.getContacts())
+                    sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { (it as ContactEntity).name })
                 }
             }
         }
@@ -32,17 +33,29 @@ class ContactsViewModel @Inject constructor(private val repo: ContactsRepo) : Vi
     fun addContact(contact: ContactEntity) {
         viewModelScope.launch {
             _state.value = _state.value?.apply {
-                add(contact)
-                sortBy { (it as ContactEntity).id }
+                add(contact.copy(id = getUniqueId()))
+                sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { (it as ContactEntity).name })
             }
         }
+    }
+
+    private fun getUniqueId(): Int {
+        var id = 0
+        try {
+            id = (_state.value?.maxWith(Comparator.comparingInt {
+                (it as ContactEntity).id
+            }) as ContactEntity).id
+        } catch (e: Exception) {
+            return id
+        }
+        return (id + 1)
     }
 
     fun deleteContact(contact: ContactEntity) {
         viewModelScope.launch {
             _state.value = _state.value?.apply {
                 remove(contact)
-                sortBy { (it as ContactEntity).id }
+                sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { (it as ContactEntity).name })
             }
         }
     }
@@ -53,7 +66,7 @@ class ContactsViewModel @Inject constructor(private val repo: ContactsRepo) : Vi
             _state.value = _state.value?.apply {
                 remove(oldContact)
                 add(newContact)
-                sortBy { (it as ContactEntity).id }
+                sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { (it as ContactEntity).name })
             }
         }
     }
@@ -63,7 +76,7 @@ class ContactsViewModel @Inject constructor(private val repo: ContactsRepo) : Vi
             _state.value = _state.value?.apply {
                 remove(contact)
                 add(contact.copy(isSelected = !contact.isSelected))
-                sortBy { (it as ContactEntity).id }
+                sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { (it as ContactEntity).name })
             }
         }
     }

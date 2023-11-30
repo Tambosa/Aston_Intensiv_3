@@ -4,6 +4,6 @@ data class ContactEntity(
     val id: Int,
     val name: String,
     val surname: String,
-    val phoneNumber: Number,
+    val phoneNumber: Number? = null,
     var isSelected: Boolean = false,
 ) : ContactItem
