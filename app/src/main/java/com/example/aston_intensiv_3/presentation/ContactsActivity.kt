@@ -45,6 +45,7 @@ class ContactsActivity : AppCompatActivity() {
     private fun initViewModel() {
         viewModel.state.observe(this) { state ->
             val data = mutableListOf<ContactsRecyclerItem>().apply {
+                add(AddContactItemSingleton)
                 addAll(state)
                 add(AddContactItemSingleton)
             }
@@ -121,7 +122,7 @@ class ContactsActivity : AppCompatActivity() {
     private fun initDialogViews(contact: ContactEntity) {
         dialogBinding.contactEditName.setText(contact.name)
         dialogBinding.contactEditSurname.setText(contact.surname)
-        dialogBinding.contactEditNumber.setText(contact.phoneNumber.toString())
+        dialogBinding.contactEditNumber.setText(contact.phoneNumber?.toString())
     }
 
     private fun initDialogButtons(
